@@ -1,6 +1,6 @@
-const service = require('../services/tasks.service');
+import * as service from '../services/tasks.service.js';
 
-exports.create = async (req, res) => {
+export const create = async (req, res) => {
   try {
     const task = await service.createTask(req.user, req.body);
     res.status(201).json(task);
@@ -9,7 +9,7 @@ exports.create = async (req, res) => {
   }
 };
 
-exports.getAll = async (req, res) => {
+export const getAll = async (req, res) => {
   try {
     const tasks = await service.getTasks(req.user);
     res.status(200).json(tasks);
@@ -18,7 +18,7 @@ exports.getAll = async (req, res) => {
   }
 };
 
-exports.getOne = async (req, res) => {
+export const getOne = async (req, res) => {
   try {
     const task = await service.getTaskById(req.params.id, req.user);
     res.status(200).json(task);
@@ -27,7 +27,7 @@ exports.getOne = async (req, res) => {
   }
 };
 
-exports.update = async (req, res) => {
+export const update = async (req, res) => {
   try {
     const updated = await service.updateTask(req.params.id, req.user, req.body);
     res.status(200).json(updated);
@@ -36,7 +36,7 @@ exports.update = async (req, res) => {
   }
 };
 
-exports.remove = async (req, res) => {
+export const remove = async (req, res) => {
   try {
     const result = await service.deleteTask(req.params.id, req.user);
     res.status(200).json(result);

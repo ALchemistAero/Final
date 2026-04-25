@@ -1,6 +1,6 @@
-const service = require('../services/auth.service');
+import * as service from '../services/auth.service.js';
 
-exports.signup = async (req, res) => {
+export const signup = async (req, res) => {
   try {
     const user = await service.signup(req.body);
     res.status(201).json(user);
@@ -9,7 +9,7 @@ exports.signup = async (req, res) => {
   }
 };
 
-exports.login = async (req, res) => {
+export const login = async (req, res) => {
   try {
     const token = await service.login(req.body.email, req.body.password);
     res.status(200).json({ token });

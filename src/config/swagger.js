@@ -1,4 +1,4 @@
-const swaggerJSDoc = require('swagger-jsdoc');
+import swaggerJSDoc from 'swagger-jsdoc';
 
 const options = {
   definition: {
@@ -8,11 +8,7 @@ const options = {
       version: '1.0.0',
       description: 'API documentation for your project',
     },
-    servers: [
-      {
-        url: 'http://localhost:3000',
-      },
-    ],
+    servers: [{ url: 'http://localhost:3000' }],
     components: {
       securitySchemes: {
         bearerAuth: {
@@ -22,15 +18,11 @@ const options = {
         },
       },
     },
-    security: [
-      {
-        bearerAuth: [],
-      },
-    ],
+    security: [{ bearerAuth: [] }],
   },
-  apis: ['./src/routes/*.js'], // where your route docs live
+  apis: ['./src/routes/*.js'],
 };
 
 const swaggerSpec = swaggerJSDoc(options);
 
-module.exports = swaggerSpec;
+export default swaggerSpec;

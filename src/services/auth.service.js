@@ -1,9 +1,10 @@
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
-const usersRepo = require('../repositories/users.repository');
+import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
+import * as usersRepo from '../repositories/users.repository.js';
 
-exports.signup = async (data) => {
+export const signup = async (data) => {
   const existing = await usersRepo.findByEmail(data.email);
+
   if (existing) {
     throw { status: 409, message: 'Email already exists' };
   }
@@ -14,27 +15,24 @@ exports.signup = async (data) => {
     name: data.name,
     email: data.email,
     password_hash: hash,
-    role: 'user'
+    role: data.role || 'user',
   });
 };
 
-exports.login = async (email, password) => {
+export const login = async (email, password) => {
   const user = await usersRepo.findByEmail(email);
 
   if (!user) {
     throw { status: 401, message: 'Invalid credentials' };
   }
 
-  const match = await bcrypt.compare(password, user.password_hash);
+  const match = await bcrypt.compare(password, user.passwordHash);
 
   if (!match) {
     throw { status: 401, message: 'Invalid credentials' };
   }
 
-  const token = jwt.sign(
-    { id: user.id, role: user.role },
-    process.env.JWT_SECRET
-  );
-
-  return token;
+  return jwt.sign({ id: user.id, role: user.role }, process.env.JWT_SECRET, {
+    expiresIn: '1d',
+  });
 };

@@ -1,50 +1,43 @@
-const repo = require('../repositories/comments.repository');
-const tasksRepo = require('../repositories/tasks.repository');
+import * as repo from '../repositories/comments.repository.js';
+import * as tasksRepo from '../repositories/tasks.repository.js';
 
-exports.createComment = async (user, data) => {
+export const createComment = async (user, data) => {
   const task = await tasksRepo.findById(data.task_id);
   if (!task) throw { status: 404, message: 'Task not found' };
-
-  return await repo.create({
-    ...data,
-    user_id: user.id
-  });
-};
-
-exports.getComments = async (user) => {
-  if (user.role === 'admin') return await repo.findAll();
-  return await repo.findAll(); // filter later if needed
-};
-
-exports.getCommentById = async (id, user) => {
-  const comment = await repo.findById(id);
-  if (!comment) throw { status: 404, message: 'Comment not found' };
-
-  if (user.role !== 'admin' && comment.user_id !== user.id) {
+  if (user.role !== 'admin' && task.userId !== user.id) {
     throw { status: 403, message: 'Forbidden' };
   }
+  return await repo.create({ ...data, user_id: user.id });
+};
 
+export const getComments = async (user) => {
+  if (user.role === 'admin') return await repo.findAll();
+  return await repo.findByUser(user.id);
+};
+
+export const getCommentById = async (id, user) => {
+  const comment = await repo.findById(id);
+  if (!comment) throw { status: 404, message: 'Comment not found' };
+  if (user.role !== 'admin' && comment.userId !== user.id) {
+    throw { status: 403, message: 'Forbidden' };
+  }
   return comment;
 };
 
-exports.updateComment = async (id, user, data) => {
+export const updateComment = async (id, user, data) => {
   const comment = await repo.findById(id);
   if (!comment) throw { status: 404, message: 'Comment not found' };
-
-  if (user.role !== 'admin' && comment.user_id !== user.id) {
+  if (user.role !== 'admin' && comment.userId !== user.id) {
     throw { status: 403, message: 'Forbidden' };
   }
-
   return await repo.update(id, data);
 };
 
-exports.deleteComment = async (id, user) => {
+export const deleteComment = async (id, user) => {
   const comment = await repo.findById(id);
   if (!comment) throw { status: 404, message: 'Comment not found' };
-
-  if (user.role !== 'admin' && comment.user_id !== user.id) {
+  if (user.role !== 'admin' && comment.userId !== user.id) {
     throw { status: 403, message: 'Forbidden' };
   }
-
   return await repo.remove(id);
 };

@@ -1,20 +1,20 @@
-const prisma = require('../prisma/client');
+import prisma from '../prisma/client.js';
 
-exports.create = async (data) => {
+export const create = async (data) => {
   try {
     return await prisma.comment.create({
       data: {
-        taskId: data.task_id,
-        userId: data.user_id,
-        body: data.body
-      }
+        taskId: Number(data.task_id),
+        userId: Number(data.user_id),
+        body: data.body,
+      },
     });
   } catch (err) {
     throw { status: 500, message: err.message };
   }
 };
 
-exports.findAll = async () => {
+export const findAll = async () => {
   try {
     return await prisma.comment.findMany();
   } catch (err) {
@@ -22,36 +22,37 @@ exports.findAll = async () => {
   }
 };
 
-exports.findById = async (id) => {
+export const findByUser = async (userId) => {
   try {
-    return await prisma.comment.findUnique({
-      where: { id: Number(id) }
-    });
+    return await prisma.comment.findMany({ where: { userId: Number(userId) } });
   } catch (err) {
     throw { status: 500, message: err.message };
   }
 };
 
-exports.update = async (id, data) => {
+export const findById = async (id) => {
+  try {
+    return await prisma.comment.findUnique({ where: { id: Number(id) } });
+  } catch (err) {
+    throw { status: 500, message: err.message };
+  }
+};
+
+export const update = async (id, data) => {
   try {
     return await prisma.comment.update({
       where: { id: Number(id) },
-      data: {
-        body: data.body
-      }
+      data: { body: data.body },
     });
   } catch (err) {
     throw { status: 500, message: err.message };
   }
 };
 
-exports.remove = async (id) => {
+export const remove = async (id) => {
   try {
-    await prisma.comment.delete({
-      where: { id: Number(id) }
-    });
-
-    return { id, message: 'Comment deleted' };
+    await prisma.comment.delete({ where: { id: Number(id) } });
+    return { id: Number(id), message: 'Comment deleted' };
   } catch (err) {
     throw { status: 500, message: err.message };
   }

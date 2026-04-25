@@ -1,29 +1,34 @@
-require('dotenv').config();
+import 'dotenv/config';
+import express from 'express';
+import swaggerUi from 'swagger-ui-express';
 
-const express = require('express');
+import swaggerSpec from './config/swagger.js';
+import authRoutes from './routes/auth.routes.js';
+import usersRoutes from './routes/users.routes.js';
+import projectsRoutes from './routes/projects.routes.js';
+import tasksRoutes from './routes/tasks.routes.js';
+import commentsRoutes from './routes/comments.routes.js';
+import errorMiddleware from './middleware/error.middleware.js';
+
 const app = express();
 
 app.use(express.json());
 
-app.use('/api/auth', require('./routes/auth.routes'));
-app.use('/api/users', require('./routes/users.routes'));
-app.use('/api/projects', require('./routes/projects.routes'));
-app.use('/api/tasks', require('./routes/tasks.routes'));
-app.use('/api/comments', require('./routes/comments.routes'));
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+app.use('/api/auth', authRoutes);
+app.use('/api/users', usersRoutes);
+app.use('/api/projects', projectsRoutes);
+app.use('/api/tasks', tasksRoutes);
+app.use('/api/comments', commentsRoutes);
 
-app.use((req, res, next) => {
+app.use((req, res) => {
   res.status(404).json({ message: 'Route not found' });
 });
 
-app.use(require('./middleware/error.middleware'));
+app.use(errorMiddleware);
 
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
-
-const swaggerUi = require('swagger-ui-express');
-const swaggerSpec = require('./config/swagger');
-
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));

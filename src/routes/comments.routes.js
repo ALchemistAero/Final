@@ -1,15 +1,13 @@
-const router = require('express').Router();
-const controller = require('../controllers/comments.controller');
-const auth = require('../middleware/auth.middleware');
+import { Router } from 'express';
+import * as commentsController from '../controllers/comments.controller.js';
+import authenticate from '../middleware/auth.middleware.js';
 
-router.post('/', auth, controller.create);
+const router = Router();
 
-router.get('/', auth, controller.getAll);
+router.post('/', authenticate, commentsController.create);
+router.get('/', authenticate, commentsController.getAll);
+router.get('/:id', authenticate, commentsController.getOne);
+router.put('/:id', authenticate, commentsController.update);
+router.delete('/:id', authenticate, commentsController.remove);
 
-router.get('/:id', auth, controller.getOne);
-
-router.put('/:id', auth, controller.update);
-
-router.delete('/:id', auth, controller.remove);
-
-module.exports = router;
+export default router;

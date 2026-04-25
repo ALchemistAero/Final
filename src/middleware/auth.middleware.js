@@ -3,7 +3,7 @@ import jwt from 'jsonwebtoken';
 export default (req, res, next) => {
   const authHeader = req.headers.authorization;
 
-  if (!authHeader) {
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
     return res.status(401).json({ message: 'Unauthorized' });
   }
 
@@ -11,12 +11,10 @@ export default (req, res, next) => {
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-
     req.user = {
       id: decoded.id,
-      role: decoded.role
+      role: decoded.role,
     };
-
     next();
   } catch (err) {
     return res.status(401).json({ message: 'Invalid token' });
