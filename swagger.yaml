@@ -1,0 +1,375 @@
+openapi: 3.0.0
+info:
+  title: Task Management API
+  version: 1.0.0
+  description: API for managing users, projects, tasks, and comments
+
+servers:
+  - url: http://localhost:3000
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+tags:
+  - name: Auth
+  - name: Users
+  - name: Projects
+  - name: Tasks
+  - name: Comments
+
+paths:
+
+  /api/auth/signup:
+    post:
+      tags: [Auth]
+      summary: Create a new user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            example:
+              name: John Doe
+              email: john@example.com
+              password: Password123!
+      responses:
+        201:
+          description: User created
+        409:
+          description: Email already exists
+
+  /api/auth/login:
+    post:
+      tags: [Auth]
+      summary: Login and get JWT
+      requestBody:
+        required: true
+        content:
+          application/json:
+            example:
+              email: john@example.com
+              password: Password123!
+      responses:
+        200:
+          description: JWT token returned
+        401:
+          description: Invalid credentials
+
+  /api/users:
+    get:
+      tags: [Users]
+      summary: Get all users (Admin only)
+      security:
+        - bearerAuth: []
+      responses:
+        200:
+          description: List of users
+
+    post:
+      tags: [Users]
+      summary: Create user (Admin only)
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            example:
+              name: Jane
+              email: jane@example.com
+              password: Password123!
+              role: user
+      responses:
+        201:
+          description: User created
+
+  /api/users/{id}:
+    get:
+      tags: [Users]
+      summary: Get user by ID
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: User found
+        404:
+          description: Not found
+
+    put:
+      tags: [Users]
+      summary: Update user
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            example:
+              name: Updated Name
+              email: updated@example.com
+      responses:
+        200:
+          description: Updated
+
+    delete:
+      tags: [Users]
+      summary: Delete user (Admin only)
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: Deleted
+
+  /api/projects:
+    get:
+      tags: [Projects]
+      summary: Get projects
+      security:
+        - bearerAuth: []
+      responses:
+        200:
+          description: List of projects
+
+    post:
+      tags: [Projects]
+      summary: Create project
+      security:
+        - bearerAuth: []
+      requestBody:
+        content:
+          application/json:
+            example:
+              name: My Project
+              description: Project description
+              status: active
+      responses:
+        201:
+          description: Created
+
+  /api/projects/{id}:
+    get:
+      tags: [Projects]
+      summary: Get project by ID
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: Project found
+
+    put:
+      tags: [Projects]
+      summary: Update project
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            example:
+              name: Updated Project
+              description: Updated description
+              status: active
+      responses:
+        200:
+          description: Updated
+
+    delete:
+      tags: [Projects]
+      summary: Delete project
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: Deleted
+
+  /api/tasks:
+    get:
+      tags: [Tasks]
+      summary: Get tasks
+      security:
+        - bearerAuth: []
+      responses:
+        200:
+          description: List of tasks
+
+    post:
+      tags: [Tasks]
+      summary: Create task
+      security:
+        - bearerAuth: []
+      requestBody:
+        content:
+          application/json:
+            example:
+              title: Task title
+              description: Task description
+              status: pending
+              project_id: 1
+      responses:
+        201:
+          description: Created
+
+  /api/tasks/{id}:
+    get:
+      tags: [Tasks]
+      summary: Get task by ID
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: Task found
+
+    put:
+      tags: [Tasks]
+      summary: Update task
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            example:
+              title: Updated Task
+              status: complete
+      responses:
+        200:
+          description: Updated
+
+    delete:
+      tags: [Tasks]
+      summary: Delete task
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: Deleted
+
+  /api/comments:
+    get:
+      tags: [Comments]
+      summary: Get comments
+      security:
+        - bearerAuth: []
+      responses:
+        200:
+          description: List of comments
+
+    post:
+      tags: [Comments]
+      summary: Create comment
+      security:
+        - bearerAuth: []
+      requestBody:
+        content:
+          application/json:
+            example:
+              task_id: 1
+              body: This is a comment
+      responses:
+        201:
+          description: Created
+
+  /api/comments/{id}:
+    get:
+      tags: [Comments]
+      summary: Get comment by ID
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: Found
+
+    put:
+      tags: [Comments]
+      summary: Update comment
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            example:
+              body: Updated comment
+      responses:
+        200:
+          description: Updated
+
+    delete:
+      tags: [Comments]
+      summary: Delete comment
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: Deleted
