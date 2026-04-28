@@ -8,7 +8,7 @@ const options = {
       version: '1.0.0',
       description: 'API documentation for your project',
     },
-    servers: [{ url: 'http://localhost:3000' }],
+    servers: [{ url: 'https://final-77ir.onrender.com' }],
     components: {
       securitySchemes: {
         bearerAuth: {
