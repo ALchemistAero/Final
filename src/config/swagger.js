@@ -1,12 +1,14 @@
+import swaggerJSDoc from 'swagger-jsdoc';
+
 const serverUrl = process.env.SERVER_URL || 'https://final-77ir.onrender.com';
 
 const options = {
   definition: {
     openapi: '3.0.0',
     info: {
-      title: 'REST API',
+      title: 'Final Project API',
       version: '1.0.0',
-      description: 'API documentation for your project',
+      description: 'API documentation for the Final Project REST API',
     },
     servers: [
       {
@@ -30,3 +32,7 @@ const options = {
   },
   apis: ['./src/routes/*.js'],
 };
+
+const swaggerSpec = swaggerJSDoc(options);
+
+export default swaggerSpec;
