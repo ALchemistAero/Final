@@ -41,7 +41,7 @@ const router = Router();
  *                 example: Password123!
  *               role:
  *                 type: string
- *                 example: user
+ *                 example: USER
  *     responses:
  *       201:
  *         description: User created successfully

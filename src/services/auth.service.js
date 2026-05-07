@@ -32,7 +32,9 @@ export const login = async (email, password) => {
     throw { status: 401, message: 'Invalid credentials' };
   }
 
-  return jwt.sign({ id: user.id, role: user.role }, process.env.JWT_SECRET, {
-    expiresIn: '1d',
-  });
+  return jwt.sign(
+    { id: user.id, role: user.role },
+    process.env.JWT_SECRET,
+    { expiresIn: '1d' }
+  );
 };
