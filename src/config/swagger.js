@@ -1,5 +1,10 @@
 import swaggerJSDoc from 'swagger-jsdoc';
 
+const serverUrl =
+  process.env.RENDER_EXTERNAL_URL ||
+  process.env.SERVER_URL ||
+  'http://localhost:3000';
+
 const options = {
   definition: {
     openapi: '3.0.0',
@@ -8,7 +13,11 @@ const options = {
       version: '1.0.0',
       description: 'API documentation for your project',
     },
-    servers: [{ url: 'https://final-77ir.onrender.com' }],
+    servers: [
+      {
+        url: serverUrl,
+      },
+    ],
     components: {
       securitySchemes: {
         bearerAuth: {
@@ -18,11 +27,9 @@ const options = {
         },
       },
     },
-    security: [{ bearerAuth: [] }],
   },
   apis: ['./src/routes/*.js'],
 };
 
 const swaggerSpec = swaggerJSDoc(options);
-
 export default swaggerSpec;

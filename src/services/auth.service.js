@@ -15,7 +15,7 @@ export const signup = async (data) => {
     name: data.name,
     email: data.email,
     password_hash: hash,
-    role: data.role || 'user',
+    role: data.role || 'USER',
   });
 };
 
