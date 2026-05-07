@@ -59,7 +59,7 @@ const router = Router();
  *       409:
  *         description: Email already exists
  */
-router.post('/', authenticate, authorizeRoles(['admin']), usersController.create);
+router.post('/', authenticate, authorizeRoles(['ADMIN']), usersController.create);
 
 /**
  * @swagger
@@ -77,7 +77,7 @@ router.post('/', authenticate, authorizeRoles(['admin']), usersController.create
  *       403:
  *         description: Admin access required
  */
-router.get('/', authenticate, authorizeRoles(['admin']), usersController.getAll);
+router.get('/', authenticate, authorizeRoles(['ADMIN']), usersController.getAll);
 
 /**
  * @swagger
@@ -182,6 +182,6 @@ router.put('/:id', authenticate, usersController.update);
  *       404:
  *         description: User not found
  */
-router.delete('/:id', authenticate, authorizeRoles(['admin']), usersController.remove);
+router.delete('/:id', authenticate, authorizeRoles(['ADMIN']), usersController.remove);
 
 export default router;

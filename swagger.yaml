@@ -1,11 +1,15 @@
 openapi: 3.0.0
+
 info:
   title: Task Management API
   version: 1.0.0
   description: API for managing users, projects, tasks, and comments
 
 servers:
+  - url: https://final-77ir.onrender.com
+    description: Production server
   - url: http://localhost:3000
+    description: Local development server
 
 components:
   securitySchemes:
@@ -22,11 +26,11 @@ tags:
   - name: Comments
 
 paths:
-
   /api/auth/signup:
     post:
       tags: [Auth]
       summary: Create a new user
+      security: []
       requestBody:
         required: true
         content:
@@ -35,9 +39,12 @@ paths:
               name: John Doe
               email: john@example.com
               password: Password123!
+              role: USER
       responses:
         201:
           description: User created
+        400:
+          description: Invalid request body
         409:
           description: Email already exists
 
@@ -45,6 +52,7 @@ paths:
     post:
       tags: [Auth]
       summary: Login and get JWT
+      security: []
       requestBody:
         required: true
         content:
@@ -55,6 +63,8 @@ paths:
       responses:
         200:
           description: JWT token returned
+        400:
+          description: Missing email or password
         401:
           description: Invalid credentials
 
@@ -67,6 +77,10 @@ paths:
       responses:
         200:
           description: List of users
+        401:
+          description: Unauthorized
+        403:
+          description: Forbidden
 
     post:
       tags: [Users]
@@ -78,13 +92,21 @@ paths:
         content:
           application/json:
             example:
-              name: Jane
+              name: Jane Doe
               email: jane@example.com
               password: Password123!
-              role: user
+              role: USER
       responses:
         201:
           description: User created
+        400:
+          description: Invalid request body
+        401:
+          description: Unauthorized
+        403:
+          description: Forbidden
+        409:
+          description: Email already exists
 
   /api/users/{id}:
     get:
@@ -98,11 +120,16 @@ paths:
           required: true
           schema:
             type: integer
+          example: 1
       responses:
         200:
           description: User found
+        401:
+          description: Unauthorized
+        403:
+          description: Forbidden
         404:
-          description: Not found
+          description: User not found
 
     put:
       tags: [Users]
@@ -115,15 +142,26 @@ paths:
           required: true
           schema:
             type: integer
+          example: 1
       requestBody:
+        required: true
         content:
           application/json:
             example:
               name: Updated Name
               email: updated@example.com
+              role: USER
       responses:
         200:
-          description: Updated
+          description: User updated
+        400:
+          description: Invalid request body
+        401:
+          description: Unauthorized
+        403:
+          description: Forbidden
+        404:
+          description: User not found
 
     delete:
       tags: [Users]
@@ -136,9 +174,16 @@ paths:
           required: true
           schema:
             type: integer
+          example: 1
       responses:
         200:
-          description: Deleted
+          description: User deleted
+        401:
+          description: Unauthorized
+        403:
+          description: Forbidden
+        404:
+          description: User not found
 
   /api/projects:
     get:
@@ -149,6 +194,8 @@ paths:
       responses:
         200:
           description: List of projects
+        401:
+          description: Unauthorized
 
     post:
       tags: [Projects]
@@ -156,15 +203,20 @@ paths:
       security:
         - bearerAuth: []
       requestBody:
+        required: true
         content:
           application/json:
             example:
               name: My Project
               description: Project description
-              status: active
+              status: ACTIVE
       responses:
         201:
-          description: Created
+          description: Project created
+        400:
+          description: Invalid request body
+        401:
+          description: Unauthorized
 
   /api/projects/{id}:
     get:
@@ -178,9 +230,16 @@ paths:
           required: true
           schema:
             type: integer
+          example: 1
       responses:
         200:
           description: Project found
+        401:
+          description: Unauthorized
+        403:
+          description: Forbidden
+        404:
+          description: Project not found
 
     put:
       tags: [Projects]
@@ -193,16 +252,26 @@ paths:
           required: true
           schema:
             type: integer
+          example: 1
       requestBody:
+        required: true
         content:
           application/json:
             example:
               name: Updated Project
               description: Updated description
-              status: active
+              status: ACTIVE
       responses:
         200:
-          description: Updated
+          description: Project updated
+        400:
+          description: Invalid request body
+        401:
+          description: Unauthorized
+        403:
+          description: Forbidden
+        404:
+          description: Project not found
 
     delete:
       tags: [Projects]
@@ -215,9 +284,16 @@ paths:
           required: true
           schema:
             type: integer
+          example: 1
       responses:
         200:
-          description: Deleted
+          description: Project deleted
+        401:
+          description: Unauthorized
+        403:
+          description: Forbidden
+        404:
+          description: Project not found
 
   /api/tasks:
     get:
@@ -228,6 +304,8 @@ paths:
       responses:
         200:
           description: List of tasks
+        401:
+          description: Unauthorized
 
     post:
       tags: [Tasks]
@@ -235,16 +313,25 @@ paths:
       security:
         - bearerAuth: []
       requestBody:
+        required: true
         content:
           application/json:
             example:
               title: Task title
               description: Task description
-              status: pending
+              status: TODO
               project_id: 1
       responses:
         201:
-          description: Created
+          description: Task created
+        400:
+          description: Invalid request body
+        401:
+          description: Unauthorized
+        403:
+          description: Forbidden
+        404:
+          description: Project not found
 
   /api/tasks/{id}:
     get:
@@ -258,9 +345,16 @@ paths:
           required: true
           schema:
             type: integer
+          example: 1
       responses:
         200:
           description: Task found
+        401:
+          description: Unauthorized
+        403:
+          description: Forbidden
+        404:
+          description: Task not found
 
     put:
       tags: [Tasks]
@@ -273,15 +367,27 @@ paths:
           required: true
           schema:
             type: integer
+          example: 1
       requestBody:
+        required: true
         content:
           application/json:
             example:
               title: Updated Task
-              status: complete
+              description: Updated task description
+              status: DONE
+              project_id: 1
       responses:
         200:
-          description: Updated
+          description: Task updated
+        400:
+          description: Invalid request body
+        401:
+          description: Unauthorized
+        403:
+          description: Forbidden
+        404:
+          description: Task not found
 
     delete:
       tags: [Tasks]
@@ -294,9 +400,16 @@ paths:
           required: true
           schema:
             type: integer
+          example: 1
       responses:
         200:
-          description: Deleted
+          description: Task deleted
+        401:
+          description: Unauthorized
+        403:
+          description: Forbidden
+        404:
+          description: Task not found
 
   /api/comments:
     get:
@@ -307,6 +420,8 @@ paths:
       responses:
         200:
           description: List of comments
+        401:
+          description: Unauthorized
 
     post:
       tags: [Comments]
@@ -314,14 +429,23 @@ paths:
       security:
         - bearerAuth: []
       requestBody:
+        required: true
         content:
           application/json:
             example:
-              task_id: 1
               body: This is a comment
+              task_id: 1
       responses:
         201:
-          description: Created
+          description: Comment created
+        400:
+          description: Invalid request body
+        401:
+          description: Unauthorized
+        403:
+          description: Forbidden
+        404:
+          description: Task not found
 
   /api/comments/{id}:
     get:
@@ -335,9 +459,16 @@ paths:
           required: true
           schema:
             type: integer
+          example: 1
       responses:
         200:
-          description: Found
+          description: Comment found
+        401:
+          description: Unauthorized
+        403:
+          description: Forbidden
+        404:
+          description: Comment not found
 
     put:
       tags: [Comments]
@@ -350,14 +481,25 @@ paths:
           required: true
           schema:
             type: integer
+          example: 1
       requestBody:
+        required: true
         content:
           application/json:
             example:
               body: Updated comment
+              task_id: 1
       responses:
         200:
-          description: Updated
+          description: Comment updated
+        400:
+          description: Invalid request body
+        401:
+          description: Unauthorized
+        403:
+          description: Forbidden
+        404:
+          description: Comment not found
 
     delete:
       tags: [Comments]
@@ -370,6 +512,13 @@ paths:
           required: true
           schema:
             type: integer
+          example: 1
       responses:
         200:
-          description: Deleted
+          description: Comment deleted
+        401:
+          description: Unauthorized
+        403:
+          description: Forbidden
+        404:
+          description: Comment not found

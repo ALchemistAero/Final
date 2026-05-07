@@ -1,9 +1,4 @@
-import swaggerJSDoc from 'swagger-jsdoc';
-
-const serverUrl =
-  process.env.RENDER_EXTERNAL_URL ||
-  process.env.SERVER_URL ||
-  'http://localhost:3000';
+const serverUrl = process.env.SERVER_URL || 'https://final-77ir.onrender.com';
 
 const options = {
   definition: {
@@ -16,6 +11,11 @@ const options = {
     servers: [
       {
         url: serverUrl,
+        description: 'Production server',
+      },
+      {
+        url: 'http://localhost:3000',
+        description: 'Local development server',
       },
     ],
     components: {
@@ -30,6 +30,3 @@ const options = {
   },
   apis: ['./src/routes/*.js'],
 };
-
-const swaggerSpec = swaggerJSDoc(options);
-export default swaggerSpec;
