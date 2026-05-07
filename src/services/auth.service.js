@@ -11,11 +11,17 @@ export const signup = async (data) => {
 
   const hash = await bcrypt.hash(data.password, 10);
 
+  const role = data.role ? data.role.toUpperCase() : 'USER';
+
+  if (!['USER', 'ADMIN'].includes(role)) {
+    throw { status: 400, message: 'Invalid role. Role must be USER or ADMIN.' };
+  }
+
   return await usersRepo.create({
     name: data.name,
     email: data.email,
     password_hash: hash,
-    role: data.role || 'USER',
+    role,
   });
 };
 

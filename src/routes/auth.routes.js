@@ -1,5 +1,4 @@
 import { Router } from 'express';
-
 import * as authController from '../controllers/auth.controller.js';
 
 const router = Router();
@@ -41,6 +40,7 @@ const router = Router();
  *                 example: Password123!
  *               role:
  *                 type: string
+ *                 enum: [USER, ADMIN]
  *                 example: USER
  *     responses:
  *       201:
@@ -72,10 +72,10 @@ router.post('/signup', authController.signup);
  *               email:
  *                 type: string
  *                 format: email
- *                 example: admin@example.com
+ *                 example: test@example.com
  *               password:
  *                 type: string
- *                 example: Admin123!
+ *                 example: Password123!
  *     responses:
  *       200:
  *         description: Login successful

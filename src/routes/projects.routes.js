@@ -1,7 +1,5 @@
 import { Router } from 'express';
-
 import * as projectsController from '../controllers/project.controller.js';
-
 import authenticate from '../middleware/auth.middleware.js';
 
 const router = Router();
@@ -28,14 +26,18 @@ const router = Router();
  *           schema:
  *             type: object
  *             required:
- *               - title
+ *               - name
  *             properties:
- *               title:
+ *               name:
  *                 type: string
  *                 example: Final API Project
  *               description:
  *                 type: string
  *                 example: REST API with Prisma, PostgreSQL, JWT, and Swagger
+ *               status:
+ *                 type: string
+ *                 enum: [ACTIVE, COMPLETED, ARCHIVED]
+ *                 example: ACTIVE
  *     responses:
  *       201:
  *         description: Project created successfully
@@ -76,7 +78,7 @@ router.get('/', authenticate, projectsController.getAll);
  *         required: true
  *         schema:
  *           type: integer
- *         example: 1
+ *           example: 1
  *     responses:
  *       200:
  *         description: Project found
@@ -101,7 +103,7 @@ router.get('/:id', authenticate, projectsController.getOne);
  *         required: true
  *         schema:
  *           type: integer
- *         example: 1
+ *           example: 1
  *     requestBody:
  *       required: true
  *       content:
@@ -109,12 +111,16 @@ router.get('/:id', authenticate, projectsController.getOne);
  *           schema:
  *             type: object
  *             properties:
- *               title:
+ *               name:
  *                 type: string
  *                 example: Updated Final API Project
  *               description:
  *                 type: string
  *                 example: Updated project description
+ *               status:
+ *                 type: string
+ *                 enum: [ACTIVE, COMPLETED, ARCHIVED]
+ *                 example: ACTIVE
  *     responses:
  *       200:
  *         description: Project updated successfully
@@ -143,7 +149,7 @@ router.put('/:id', authenticate, projectsController.update);
  *         required: true
  *         schema:
  *           type: integer
- *         example: 1
+ *           example: 1
  *     responses:
  *       200:
  *         description: Project deleted successfully

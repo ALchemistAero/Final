@@ -1,7 +1,5 @@
 import { Router } from 'express';
-
 import * as tasksController from '../controllers/tasks.controller.js';
-
 import authenticate from '../middleware/auth.middleware.js';
 
 const router = Router();
@@ -29,7 +27,7 @@ const router = Router();
  *             type: object
  *             required:
  *               - title
- *               - projectId
+ *               - project_id
  *             properties:
  *               title:
  *                 type: string
@@ -39,8 +37,9 @@ const router = Router();
  *                 example: Add OpenAPI documentation for all routes
  *               status:
  *                 type: string
- *                 example: pending
- *               projectId:
+ *                 enum: [TODO, IN_PROGRESS, DONE]
+ *                 example: TODO
+ *               project_id:
  *                 type: integer
  *                 example: 1
  *     responses:
@@ -50,6 +49,10 @@ const router = Router();
  *         description: Invalid request body
  *       401:
  *         description: Unauthorized
+ *       403:
+ *         description: Forbidden
+ *       404:
+ *         description: Project not found
  */
 router.post('/', authenticate, tasksController.create);
 
@@ -83,7 +86,7 @@ router.get('/', authenticate, tasksController.getAll);
  *         required: true
  *         schema:
  *           type: integer
- *         example: 1
+ *           example: 1
  *     responses:
  *       200:
  *         description: Task found
@@ -108,7 +111,7 @@ router.get('/:id', authenticate, tasksController.getOne);
  *         required: true
  *         schema:
  *           type: integer
- *         example: 1
+ *           example: 1
  *     requestBody:
  *       required: true
  *       content:
@@ -124,8 +127,9 @@ router.get('/:id', authenticate, tasksController.getOne);
  *                 example: Updated task description
  *               status:
  *                 type: string
- *                 example: completed
- *               projectId:
+ *                 enum: [TODO, IN_PROGRESS, DONE]
+ *                 example: DONE
+ *               project_id:
  *                 type: integer
  *                 example: 1
  *     responses:
@@ -156,7 +160,7 @@ router.put('/:id', authenticate, tasksController.update);
  *         required: true
  *         schema:
  *           type: integer
- *         example: 1
+ *           example: 1
  *     responses:
  *       200:
  *         description: Task deleted successfully

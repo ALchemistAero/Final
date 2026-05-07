@@ -1,7 +1,5 @@
 import { Router } from 'express';
-
 import * as commentsController from '../controllers/comments.controller.js';
-
 import authenticate from '../middleware/auth.middleware.js';
 
 const router = Router();
@@ -28,13 +26,13 @@ const router = Router();
  *           schema:
  *             type: object
  *             required:
- *               - content
- *               - taskId
+ *               - body
+ *               - task_id
  *             properties:
- *               content:
+ *               body:
  *                 type: string
  *                 example: This task is almost done.
- *               taskId:
+ *               task_id:
  *                 type: integer
  *                 example: 1
  *     responses:
@@ -44,6 +42,10 @@ const router = Router();
  *         description: Invalid request body
  *       401:
  *         description: Unauthorized
+ *       403:
+ *         description: Forbidden
+ *       404:
+ *         description: Task not found
  */
 router.post('/', authenticate, commentsController.create);
 
@@ -77,7 +79,7 @@ router.get('/', authenticate, commentsController.getAll);
  *         required: true
  *         schema:
  *           type: integer
- *         example: 1
+ *           example: 1
  *     responses:
  *       200:
  *         description: Comment found
@@ -102,7 +104,7 @@ router.get('/:id', authenticate, commentsController.getOne);
  *         required: true
  *         schema:
  *           type: integer
- *         example: 1
+ *           example: 1
  *     requestBody:
  *       required: true
  *       content:
@@ -110,10 +112,10 @@ router.get('/:id', authenticate, commentsController.getOne);
  *           schema:
  *             type: object
  *             properties:
- *               content:
+ *               body:
  *                 type: string
  *                 example: Updated comment text.
- *               taskId:
+ *               task_id:
  *                 type: integer
  *                 example: 1
  *     responses:
@@ -144,7 +146,7 @@ router.put('/:id', authenticate, commentsController.update);
  *         required: true
  *         schema:
  *           type: integer
- *         example: 1
+ *           example: 1
  *     responses:
  *       200:
  *         description: Comment deleted successfully
